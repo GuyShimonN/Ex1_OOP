@@ -180,7 +180,7 @@ public class GameLogic implements PlayableLogic {
 //            ans=true;
 //        }
 //        //oponnet piece
-//        kill_spot=new Position(b.getX()-1,b.getY());
+//        kill_spot=new Positgion(b.getX()-1,b.getY());
 //        Piece oppent_could_be_kill = this.getPieceAtPosition(kill_spot);
 //        if(oppent_could_be_kill != null&&checkbounds(b))
 //            if((oppent_could_be_kill.getOwner() != p))
