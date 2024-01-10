@@ -27,9 +27,10 @@ public class GameLogic implements PlayableLogic {
                 }
                 if (this.getPieceAtPosition(b).getType().equals("♙")) {
                     kill(b, atck);
+                }
                     //   kill2(b,atck);
                     return ans;
-                }
+
             }
         } else {
             if (from.getOwner() != this.def) {
@@ -42,8 +43,9 @@ public class GameLogic implements PlayableLogic {
                 if (this.getPieceAtPosition(b)!=null) {
                     if (this.getPieceAtPosition(b).getType().equals("♙")) {
                         kill(b, def);
-                        return ans;
                     }
+                        return ans;
+
                 }
             }
         }
@@ -143,58 +145,6 @@ public class GameLogic implements PlayableLogic {
             }
         }
 
-
-
-
-
-
-
-
-//        // check for the first layers
-//        boolean ans=false;
-//        // check for the second layers
-//        // x== line zero heat spot zero
-//        Position kill_spot = new Position(b.getX(), 0);
-//        Piece kill_p = this.getPieceAtPosition(kill_spot);
-//        if (b.getY() == 1 && kill_p != null && kill_p.getOwner() != p) {
-//            this.Board[b.getX()][0] = null;
-//            ans=true;
-//        }
-//        // x==zero kill
-//        kill_spot = new Position(b.getX(), 10);
-//        kill_p = this.getPieceAtPosition(kill_spot);
-//        if (b.getY() == 9 && kill_p != null && kill_p.getOwner() != p) {
-//            this.Board[b.getX()][10] = null;
-//            ans=true;
-//        }
-//        kill_spot = new Position(0, b.getY());
-//        kill_p = this.getPieceAtPosition(kill_spot);
-//        if (b.getX() == 1 && kill_p != null && kill_p.getOwner() != p) {
-//            this.Board[0][b.getY()] = null;
-//            ans=true;
-//        }
-//        kill_spot = new Position(10, b.getY());
-//        kill_p = this.getPieceAtPosition(kill_spot);
-//        if (b.getX() == 9 && kill_p != null && kill_p.getOwner() != p) {
-//            this.Board[10][b.getY()] = null;
-//            ans=true;
-//        }
-//        //oponnet piece
-//        kill_spot=new Positgion(b.getX()-1,b.getY());
-//        Piece oppent_could_be_kill = this.getPieceAtPosition(kill_spot);
-//        if(oppent_could_be_kill != null&&checkbounds(b))
-//            if((oppent_could_be_kill.getOwner() != p))
-//            {
-//                //my team
-//                Position position_my_teamaete_to_kill=new Position(b.getX()-2,b.getY());
-//                Piece my_teamaete_to_kill = this.getPieceAtPosition(position_my_teamaete_to_kill);
-//                if (my_teamaete_to_kill==p)
-//                {
-//                    this.Board[kill_spot.getX()][kill_spot.getY()]=null;
-//                }
-//            }
-//
-//        return ans;
     }
 
     public void SetBoard(Position a,Piece l){
