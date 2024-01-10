@@ -20,3 +20,4 @@ public class Pawn extends ConcretePiece{
 }
 //test
 //imaniak
+// orel test
