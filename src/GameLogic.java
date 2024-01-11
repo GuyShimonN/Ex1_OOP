@@ -176,6 +176,21 @@ public class GameLogic implements PlayableLogic {
 
     @Override
     public boolean isGameFinished() {
+        if(this.Board[0][0]!=null||this.Board[0][10]!=null||this.Board[10][0]!=null||this.Board[10][10]!=null){
+            def.inc_wins();
+            return true;
+        }
+       Position attck_N=new Position(live_king.getX(), live_king.getY()+1);
+        Position attck_S=new Position(live_king.getX(), live_king.getY()-1);
+        Position attck_W=new Position(live_king.getX()-1, live_king.getY());
+        Position attck_E=new Position(live_king.getX()+1, live_king.getY());
+
+
+
+       // if (checkbounds(attck_N)
+
+
+
         return false;
     }
 
@@ -261,6 +276,10 @@ public class GameLogic implements PlayableLogic {
                         return false;
                     }
                 }
+                if( !s.equals("♙")) {
+                live_king.setX(b.getX());
+                live_king.setY(b.getY());
+                }
                 SetBoard(a, null);
                 SetBoard(b, from);
                 return true;
@@ -273,6 +292,11 @@ public class GameLogic implements PlayableLogic {
                         //if (getPieceAtPosition(new Position(i, a.getX())) != null)
                         return false;
                     }
+                }
+                if( !s.equals("♙")) {
+
+                    live_king.setX(b.getX());
+                    live_king.setY(b.getY());
                 }
                 SetBoard(a, null);
                 SetBoard(b, from);
@@ -290,6 +314,10 @@ public class GameLogic implements PlayableLogic {
 
 
                 }
+                if( !s.equals("♙")) {
+                    live_king.setX(b.getX());
+                    live_king.setY(b.getY());
+                }
                 SetBoard(a, null);
                 SetBoard(b, from);
                 return true;
@@ -300,6 +328,10 @@ public class GameLogic implements PlayableLogic {
                     if (getPieceAtPosition(new Position(i, a.getY())) != null) {
                         return false;
                     }
+                }
+                if( !s.equals("♙")) {
+                    live_king.setX(b.getX());
+                    live_king.setY(b.getY());
                 }
                 SetBoard(a, null);
                 SetBoard(b, from);

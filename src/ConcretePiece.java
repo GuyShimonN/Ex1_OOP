@@ -1,6 +1,6 @@
 public class ConcretePiece implements Piece{
     private final ConcretePlayer owner;
-    private String name;
+    private final String name;
     private int num_step;
     public ConcretePiece(ConcretePlayer p,String name){
         this.owner = p;
