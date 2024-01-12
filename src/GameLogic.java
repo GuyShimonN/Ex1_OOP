@@ -7,6 +7,8 @@ public class GameLogic implements PlayableLogic {
     private ConcretePlayer def;
     private boolean atck_turn = true;
 
+    private Position live_king =new Position(5,5);
+
     private Piece[][] Board = new Piece[11][11];
 
     public GameLogic() {
@@ -25,12 +27,13 @@ public class GameLogic implements PlayableLogic {
                 if (ans) {
                     atck_turn = false;
                 }
-                if (this.getPieceAtPosition(b).getType().equals("♙")) {
-                    kill(b, atck);
-                }
+                if (this.getPieceAtPosition(b)!=null) {
+                    if (this.getPieceAtPosition(b).getType().equals("♙")) {
+                        kill(b, atck);
+                    }
                     //   kill2(b,atck);
                     return ans;
-
+                }
             }
         } else {
             if (from.getOwner() != this.def) {
@@ -184,10 +187,60 @@ public class GameLogic implements PlayableLogic {
         Position attck_S=new Position(live_king.getX(), live_king.getY()-1);
         Position attck_W=new Position(live_king.getX()-1, live_king.getY());
         Position attck_E=new Position(live_king.getX()+1, live_king.getY());
+        boolean n =false;
+        boolean s =false;
+        boolean e =false;
+        boolean w =false;
+        Position w1 = new Position(live_king.getX()-1, live_king.getY());
+        Position e1 = new Position(live_king.getX()+1, live_king.getY());
+        Position s1 = new Position(live_king.getX(), live_king.getY()+1);
+        Position n1 = new Position(live_king.getX(), live_king.getY()-1);
+        if (!checkbounds(w1)){
+            w=true;
+        }
+        else {
+            if (this.getPieceAtPosition(w1)!=null) {
+                if (this.getPieceAtPosition(w1).getOwner() != def) {
+                    w = true;
+                }
+            }
+        }
+        if (!checkbounds(e1)){
+            e=true;
+        }
+        else {
+            if (this.getPieceAtPosition(e1)!=null) {
+                if (this.getPieceAtPosition(e1).getOwner() != def) {
+                    e = true;
+                }
+            }
+        }
+        if (!checkbounds(s1)){
+            s=true;
+        }
+        else {
+            if (this.getPieceAtPosition(s1)!=null) {
+                if (this.getPieceAtPosition(s1).getOwner() != def) {
+                    s = true;
+                }
+            }
+        }
+        if (!checkbounds(n1)){
+            n=true;
+        }
+        else {
+            if (this.getPieceAtPosition(n1)!=null) {
 
+                if (this.getPieceAtPosition(n1).getOwner() != def) {
+                    n = true;
+                }
+            }
+        }
 
+       if (n&&s&&e&&w){
+           return true;
 
-       // if (checkbounds(attck_N)
+       }
 
 
 

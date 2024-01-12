@@ -17,4 +17,11 @@ public class ConcretePlayer implements Player{
     public int getWins() {
         return counter_win;
     }
+
+
+    public  void inc_wins()
+     {
+         this.counter_win++;
+     }
+
 }
