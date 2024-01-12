@@ -254,6 +254,7 @@ public class GameLogic implements PlayableLogic {
 
     @Override
     public void reset() {
+        atck_turn=true;
         Board = new Piece[11][11];
         // player one setting
         create_players();
