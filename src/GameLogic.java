@@ -6,6 +6,7 @@ public class GameLogic implements PlayableLogic {
     private ConcretePlayer atck;
     private ConcretePlayer def;
     private boolean atck_turn = true;
+    private boolean killKing=false;
 
     private Position live_king =new Position(5,5);
 
@@ -30,6 +31,7 @@ public class GameLogic implements PlayableLogic {
                 if (this.getPieceAtPosition(b)!=null) {
                     if (this.getPieceAtPosition(b).getType().equals("♙")) {
                         kill(b, atck);
+                        killKing=kill_King(b,live_king,def);
                     }
                     //   kill2(b,atck);
                     return ans;
@@ -47,12 +49,73 @@ public class GameLogic implements PlayableLogic {
                     if (this.getPieceAtPosition(b).getType().equals("♙")) {
                         kill(b, def);
                     }
-                        return ans;
+                    return ans;
 
                 }
             }
         }
-     return false; //if we have a problame is here .
+        return false; //if we have a problame is here .
+    }
+
+    private boolean kill_King(Position b, Position liveKing, ConcretePlayer def) {
+        boolean n =false;
+        boolean s =false;
+        boolean e =false;
+        boolean w =false;
+        Position w1 = new Position(live_king.getX()-1, live_king.getY());
+        Position e1 = new Position(live_king.getX()+1, live_king.getY());
+        Position s1 = new Position(live_king.getX(), live_king.getY()+1);
+        Position n1 = new Position(live_king.getX(), live_king.getY()-1);
+        if (!checkbounds(w1)){
+            w=true;
+        }
+        else {
+            if (this.getPieceAtPosition(w1)!=null) {
+                if (this.getPieceAtPosition(w1).getOwner() != def) {
+                    w = true;
+                }
+            }
+        }
+        if (!checkbounds(e1)){
+            e=true;
+        }
+        else {
+            if (this.getPieceAtPosition(e1)!=null) {
+                if (this.getPieceAtPosition(e1).getOwner() != def) {
+                    e = true;
+                }
+            }
+        }
+        if (!checkbounds(s1)){
+            s=true;
+        }
+        else {
+            if (this.getPieceAtPosition(s1)!=null) {
+                if (this.getPieceAtPosition(s1).getOwner() != def) {
+                    s = true;
+                }
+            }
+        }
+        if (!checkbounds(n1)){
+            n=true;
+        }
+        else {
+            if (this.getPieceAtPosition(n1)!=null) {
+
+                if (this.getPieceAtPosition(n1).getOwner() != def) {
+                    n = true;
+                }
+            }
+        }
+
+        if (n&&s&&e&&w){
+
+            Pawn pieceAtPosition = (Pawn)this.getPieceAtPosition(b);
+            pieceAtPosition.inc_kill();
+            return true;
+        }
+        return false;
+
     }
 
     public void kill(Position b, ConcretePlayer p) {
@@ -62,13 +125,13 @@ public class GameLogic implements PlayableLogic {
                 Position n2 = new Position(b.getX(),b.getY()-2);
                 if ((checkbounds(n2))&&this.getPieceAtPosition(n2)!=null&&this.getPieceAtPosition(n2).getType().equals("♙")){
                     if(this.getPieceAtPosition(n2).getOwner()== p){
-                       Pawn eat = (Pawn) this.getPieceAtPosition(b);
+                        Pawn eat = (Pawn) this.getPieceAtPosition(b);
                         if (this.getPieceAtPosition(n1).getType().equals("♙")) {
                             eat.inc_kill();
                             this.Board[b.getX()][b.getY() - 1] = null;
                         }
                     }
-                    }
+                }
                 if (n1.getY()==0) {
                     Pawn eat = (Pawn) this.getPieceAtPosition(b);
                     if (this.getPieceAtPosition(n1).getType().equals("♙")) {
@@ -76,7 +139,7 @@ public class GameLogic implements PlayableLogic {
                         this.Board[b.getX()][b.getY() - 1] = null;
                     }
                 }
-                }
+            }
         }
 
 
@@ -183,65 +246,65 @@ public class GameLogic implements PlayableLogic {
             def.inc_wins();
             return true;
         }
-       Position attck_N=new Position(live_king.getX(), live_king.getY()+1);
-        Position attck_S=new Position(live_king.getX(), live_king.getY()-1);
-        Position attck_W=new Position(live_king.getX()-1, live_king.getY());
-        Position attck_E=new Position(live_king.getX()+1, live_king.getY());
-        boolean n =false;
-        boolean s =false;
-        boolean e =false;
-        boolean w =false;
-        Position w1 = new Position(live_king.getX()-1, live_king.getY());
-        Position e1 = new Position(live_king.getX()+1, live_king.getY());
-        Position s1 = new Position(live_king.getX(), live_king.getY()+1);
-        Position n1 = new Position(live_king.getX(), live_king.getY()-1);
-        if (!checkbounds(w1)){
-            w=true;
+        if(killKing)
+        {
+            atck.inc_wins();
+            return true;
         }
-        else {
-            if (this.getPieceAtPosition(w1)!=null) {
-                if (this.getPieceAtPosition(w1).getOwner() != def) {
-                    w = true;
-                }
-            }
-        }
-        if (!checkbounds(e1)){
-            e=true;
-        }
-        else {
-            if (this.getPieceAtPosition(e1)!=null) {
-                if (this.getPieceAtPosition(e1).getOwner() != def) {
-                    e = true;
-                }
-            }
-        }
-        if (!checkbounds(s1)){
-            s=true;
-        }
-        else {
-            if (this.getPieceAtPosition(s1)!=null) {
-                if (this.getPieceAtPosition(s1).getOwner() != def) {
-                    s = true;
-                }
-            }
-        }
-        if (!checkbounds(n1)){
-            n=true;
-        }
-        else {
-            if (this.getPieceAtPosition(n1)!=null) {
-
-                if (this.getPieceAtPosition(n1).getOwner() != def) {
-                    n = true;
-                }
-            }
-        }
-
-       if (n&&s&&e&&w){
-           return true;
-
-       }
-
+//        boolean n =false;
+//        boolean s =false;
+//        boolean e =false;
+//        boolean w =false;
+//        Position w1 = new Position(live_king.getX()-1, live_king.getY());
+//        Position e1 = new Position(live_king.getX()+1, live_king.getY());
+//        Position s1 = new Position(live_king.getX(), live_king.getY()+1);
+//        Position n1 = new Position(live_king.getX(), live_king.getY()-1);
+//        if (!checkbounds(w1)){
+//            w=true;
+//        }
+//        else {
+//            if (this.getPieceAtPosition(w1)!=null) {
+//                if (this.getPieceAtPosition(w1).getOwner() != def) {
+//                    w = true;
+//                }
+//            }
+//        }
+//        if (!checkbounds(e1)){
+//            e=true;
+//        }
+//        else {
+//            if (this.getPieceAtPosition(e1)!=null) {
+//                if (this.getPieceAtPosition(e1).getOwner() != def) {
+//                    e = true;
+//                }
+//            }
+//        }
+//        if (!checkbounds(s1)){
+//            s=true;
+//        }
+//        else {
+//            if (this.getPieceAtPosition(s1)!=null) {
+//                if (this.getPieceAtPosition(s1).getOwner() != def) {
+//                    s = true;
+//                }
+//            }
+//        }
+//        if (!checkbounds(n1)){
+//            n=true;
+//        }
+//        else {
+//            if (this.getPieceAtPosition(n1)!=null) {
+//
+//                if (this.getPieceAtPosition(n1).getOwner() != def) {
+//                    n = true;
+//                }
+//            }
+//        }
+//
+//        if (n&&s&&e&&w){
+//            return true;
+//        }
+//
 
 
         return false;
@@ -257,7 +320,7 @@ public class GameLogic implements PlayableLogic {
         atck_turn=true;
         Board = new Piece[11][11];
         // player one setting
-        create_players();
+        //   create_players();
 
 
         // setting pieces locations and id
@@ -331,8 +394,8 @@ public class GameLogic implements PlayableLogic {
                     }
                 }
                 if( !s.equals("♙")) {
-                live_king.setX(b.getX());
-                live_king.setY(b.getY());
+                    live_king.setX(b.getX());
+                    live_king.setY(b.getY());
                 }
                 SetBoard(a, null);
                 SetBoard(b, from);
