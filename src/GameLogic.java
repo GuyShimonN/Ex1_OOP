@@ -60,7 +60,7 @@ public class GameLogic implements PlayableLogic {
         if ((checkbounds(n1))&&this.getPieceAtPosition(n1)!=null){
             if(this.getPieceAtPosition(n1).getOwner()!= p){
                 Position n2 = new Position(b.getX(),b.getY()-2);
-                if ((checkbounds(n2))&&this.getPieceAtPosition(n2)!=null){
+                if ((checkbounds(n2))&&this.getPieceAtPosition(n2)!=null&&this.getPieceAtPosition(n2).getType().equals("♙")){
                     if(this.getPieceAtPosition(n2).getOwner()== p){
                        Pawn eat = (Pawn) this.getPieceAtPosition(b);
                         if (this.getPieceAtPosition(n1).getType().equals("♙")) {
@@ -84,7 +84,7 @@ public class GameLogic implements PlayableLogic {
         if ((checkbounds(s1))&&this.getPieceAtPosition(s1)!=null){
             if(this.getPieceAtPosition(s1).getOwner()!= p){
                 Position s2 = new Position(b.getX(),b.getY()+2);
-                if ((checkbounds(s2))&&this.getPieceAtPosition(s2)!=null){
+                if ((checkbounds(s2))&&this.getPieceAtPosition(s2)!=null&&this.getPieceAtPosition(s2).getType().equals("♙")){
                     if(this.getPieceAtPosition(s2).getOwner()== p){
                         Pawn eat = (Pawn) this.getPieceAtPosition(b);
                         if (this.getPieceAtPosition(s1).getType().equals("♙")) {
@@ -107,7 +107,7 @@ public class GameLogic implements PlayableLogic {
         if ((checkbounds(e1))&&this.getPieceAtPosition(e1)!=null){
             if(this.getPieceAtPosition(e1).getOwner()!= p){
                 Position e2 = new Position(b.getX()+2,b.getY());
-                if ((checkbounds(e2))&&this.getPieceAtPosition(e2)!=null){
+                if ((checkbounds(e2))&&this.getPieceAtPosition(e2)!=null&&this.getPieceAtPosition(e2).getType().equals("♙")){
                     if(this.getPieceAtPosition(e2).getOwner()== p){
                         Pawn eat = (Pawn) this.getPieceAtPosition(b);
                         if (this.getPieceAtPosition(e1).getType().equals("♙")) {
@@ -129,7 +129,7 @@ public class GameLogic implements PlayableLogic {
         if ((checkbounds(w1))&&this.getPieceAtPosition(w1)!=null){
             if(this.getPieceAtPosition(w1).getOwner()!= p){
                 Position w2 = new Position(b.getX()-2,b.getY());
-                if ((checkbounds(w2))&&this.getPieceAtPosition(w2)!=null){
+                if ((checkbounds(w2))&&this.getPieceAtPosition(w2)!=null&&this.getPieceAtPosition(w2).getType().equals("♙")){
                     if(this.getPieceAtPosition(w2).getOwner()== p){
                         Pawn eat = (Pawn) this.getPieceAtPosition(b);
                         if (this.getPieceAtPosition(w1).getType().equals("♙")) {
