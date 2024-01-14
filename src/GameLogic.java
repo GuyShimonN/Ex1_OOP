@@ -3,14 +3,18 @@ import java.util.ArrayList;
 
 
 public class GameLogic implements PlayableLogic {
+    private ArrayList<Position> undo = new ArrayList<Position>();
     private ConcretePlayer atck;
     private ConcretePlayer def;
+    private Position live_king =new Position(5,5);
+    private Piece[][] Board = new Piece[11][11];
+
     private boolean atck_turn = true;
     private boolean killKing=false;
 
-    private Position live_king =new Position(5,5);
 
-    private Piece[][] Board = new Piece[11][11];
+
+
 
     public GameLogic() {
         create_players();
@@ -26,6 +30,8 @@ public class GameLogic implements PlayableLogic {
             } else {
                 boolean ans = logic_move(a, b);
                 if (ans) {
+                    undo.add(a);
+                    undo.add(b);
                     atck_turn = false;
                 }
                 if (this.getPieceAtPosition(b)!=null) {
@@ -44,6 +50,8 @@ public class GameLogic implements PlayableLogic {
                 boolean ans = logic_move(a, b);
                 if (ans) {
                     atck_turn = true;
+                    undo.add(a);
+                    undo.add(b);
                 }
                 if (this.getPieceAtPosition(b)!=null) {
                     if (this.getPieceAtPosition(b).getType().equals("♙")) {
@@ -358,10 +366,33 @@ public class GameLogic implements PlayableLogic {
 
     }
 
-
+    public void move_legit(Position a,Position b,boolean bo){
+        Piece from = getPieceAtPosition(a);
+        SetBoard(a, null);
+        SetBoard(b, from);
+        if (bo){
+            kill(b,atck);
+        }
+        else {
+            kill(b, def);
+        }
+    }
     @Override
     public void undoLastMove() {
-
+        undo.removeLast();
+        undo.removeLast();
+        reset();
+    boolean bo =true;
+    int j =2;
+    for (int i=0;i<undo.size();i=i+2){
+        move_legit(undo.get(i),undo.get(i+1),bo);
+        if (j%2==0){
+            bo=false;
+        }
+        else {
+            bo= true;
+        }
+    }
     }
 
     @Override
