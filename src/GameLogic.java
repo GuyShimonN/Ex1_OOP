@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 
 public class GameLogic implements PlayableLogic {
+    private ArrayList<ConcretePiece> arry_sort = new ArrayList<ConcretePiece>();
     private ArrayList<Position> undo = new ArrayList<Position>();
     private ConcretePlayer atck;
     private ConcretePlayer def;
@@ -108,35 +109,65 @@ public class GameLogic implements PlayableLogic {
         Board = new Piece[11][11];
         for (int i = 3; i < 8; i++) {
             this.Board[i][0] = new Pawn((this.atck), "A"+(i - 2));
+            arry_sort.add((ConcretePiece) this.Board[i][0]);
             this.Board[i][10] = new Pawn((this.atck), "A"+(i + 17));
+            arry_sort.add((ConcretePiece) this.Board[i][10]);
         }
         Board[5][1] = new Pawn((this.atck),"A6");
+        arry_sort.add((ConcretePiece) this.Board[5][1]);
         this.Board[0][3] = new Pawn((this.atck),"A7");
+        arry_sort.add((ConcretePiece) this.Board[0][3]);
         this.Board[10][3] = new Pawn((this.atck),"A8");
+        arry_sort.add((ConcretePiece) this.Board[10][3]);
         this.Board[0][4] = new Pawn((this.atck),"A9");
+        arry_sort.add((ConcretePiece) this.Board[0][4]);
         this.Board[10][4] = new Pawn((this.atck),"A10");
+        arry_sort.add((ConcretePiece) this.Board[10][4]);
         this.Board[0][5] = new Pawn((this.atck),"A11");
+        arry_sort.add((ConcretePiece) this.Board[0][5]);
         this.Board[1][5] = new Pawn((this.atck),"A12");
+        arry_sort.add((ConcretePiece) this.Board[1][5]);
         this.Board[9][5] = new Pawn((this.atck),"A13");
+        arry_sort.add((ConcretePiece) this.Board[9][5]);
         this.Board[10][5] = new Pawn((this.atck),"A14");
+        arry_sort.add((ConcretePiece) this.Board[10][5]);
         this.Board[0][6] = new Pawn((this.atck),"A15");
+        arry_sort.add((ConcretePiece) this.Board[0][6]);
         this.Board[10][6] = new Pawn((this.atck),"A16");
+        arry_sort.add((ConcretePiece) this.Board[10][6]);
         this.Board[0][7] = new Pawn((this.atck),"A17");
+        arry_sort.add((ConcretePiece) this.Board[0][7]);
         this.Board[10][7] = new Pawn((this.atck),"A18");
+        arry_sort.add((ConcretePiece) this.Board[10][7]);
         this.Board[5][9] = new Pawn((this.atck),"A19");
+        arry_sort.add((ConcretePiece) this.Board[5][9]);
         this.Board[5][3] = new Pawn((this.def),"D1");
+        arry_sort.add((ConcretePiece) this.Board[5][3]);
         this.Board[4][4] = new Pawn((this.def),"D2");
+        arry_sort.add((ConcretePiece) this.Board[4][4]);
+
         this.Board[5][4] = new Pawn((this.def),"D3");
+        arry_sort.add((ConcretePiece) this.Board[5][4]);
         this.Board[6][4] = new Pawn((this.def),"D4");
+        arry_sort.add((ConcretePiece) this.Board[6][4]);
         this.Board[3][5] = new Pawn((this.def),"D5");
+        arry_sort.add((ConcretePiece) this.Board[3][5]);
         this.Board[4][5] = new Pawn((this.def),"D6");
+        arry_sort.add((ConcretePiece) this.Board[4][5]);
         this.Board[5][5] = new King((this.def),"K7");
+        arry_sort.add((ConcretePiece) this.Board[5][5]);
         this.Board[6][5] = new Pawn((this.def),"D8");
+        arry_sort.add((ConcretePiece) this.Board[6][5]);
         this.Board[7][5] = new Pawn((this.def),"D9");
+        arry_sort.add((ConcretePiece) this.Board[7][5]);
         this.Board[4][6] = new Pawn((this.def),"D10");
+        arry_sort.add((ConcretePiece) this.Board[4][6]);
         this.Board[5][6] = new Pawn((this.def),"D11");
+        arry_sort.add((ConcretePiece) this.Board[5][6]);
         this.Board[6][6] = new Pawn((this.def),"D12");
+        arry_sort.add((ConcretePiece) this.Board[6][6]);
         this.Board[5][7] = new Pawn((this.def),"D13");
+        arry_sort.add((ConcretePiece) this.Board[5][7]);
 
     }
 
