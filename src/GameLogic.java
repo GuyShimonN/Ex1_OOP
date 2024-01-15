@@ -8,7 +8,7 @@ public class GameLogic implements PlayableLogic {
     private ConcretePlayer def;
     private Position live_king =new Position(5,5);
     private Piece[][] Board = new Piece[11][11];
-
+    private boolean undo_lest_move = true;
     private boolean atck_turn = true;
     private boolean killKing=false;
 
@@ -30,8 +30,10 @@ public class GameLogic implements PlayableLogic {
             } else {
                 boolean ans = logic_move(a, b);
                 if (ans) {
+                    if (undo_lest_move){
                     undo.add(a);
                     undo.add(b);
+                    }
                     atck_turn = false;
                 }
                 if (this.getPieceAtPosition(b)!=null) {
@@ -50,8 +52,9 @@ public class GameLogic implements PlayableLogic {
                 boolean ans = logic_move(a, b);
                 if (ans) {
                     atck_turn = true;
-                    undo.add(a);
-                    undo.add(b);
+                    if (undo_lest_move){
+                        undo.add(a);
+                        undo.add(b);}
                 }
                 if (this.getPieceAtPosition(b)!=null) {
                     if (this.getPieceAtPosition(b).getType().equals("♙")) {
@@ -64,68 +67,203 @@ public class GameLogic implements PlayableLogic {
         }
         return false; //if we have a problame is here .
     }
+    @Override
+    public Piece getPieceAtPosition(Position position) {
+        return Board[position.getX()][position.getY()];
+    }
 
-    private boolean kill_King(Position b, Position liveKing, ConcretePlayer def) {
-        boolean n =false;
-        boolean s =false;
-        boolean e =false;
-        boolean w =false;
-        Position w1 = new Position(live_king.getX()-1, live_king.getY());
-        Position e1 = new Position(live_king.getX()+1, live_king.getY());
-        Position s1 = new Position(live_king.getX(), live_king.getY()+1);
-        Position n1 = new Position(live_king.getX(), live_king.getY()-1);
-        if (!checkbounds(w1)){
-            w=true;
-        }
-        else {
-            if (this.getPieceAtPosition(w1)!=null) {
-                if (this.getPieceAtPosition(w1).getOwner() != def) {
-                    w = true;
-                }
-            }
-        }
-        if (!checkbounds(e1)){
-            e=true;
-        }
-        else {
-            if (this.getPieceAtPosition(e1)!=null) {
-                if (this.getPieceAtPosition(e1).getOwner() != def) {
-                    e = true;
-                }
-            }
-        }
-        if (!checkbounds(s1)){
-            s=true;
-        }
-        else {
-            if (this.getPieceAtPosition(s1)!=null) {
-                if (this.getPieceAtPosition(s1).getOwner() != def) {
-                    s = true;
-                }
-            }
-        }
-        if (!checkbounds(n1)){
-            n=true;
-        }
-        else {
-            if (this.getPieceAtPosition(n1)!=null) {
+    @Override
+    public Player getFirstPlayer() {
+        return atck;
+    }
 
-                if (this.getPieceAtPosition(n1).getOwner() != def) {
-                    n = true;
-                }
-            }
-        }
+    @Override
+    public Player getSecondPlayer() {
+        return def;
+    }
 
-        if (n&&s&&e&&w){
-
-            Pawn pieceAtPosition = (Pawn)this.getPieceAtPosition(b);
-            pieceAtPosition.inc_kill();
+    @Override
+    public boolean isGameFinished() {
+        if(this.Board[0][0]!=null||this.Board[0][10]!=null||this.Board[10][0]!=null||this.Board[10][10]!=null){
+            def.inc_wins();
             return true;
         }
+        if(killKing)
+        {
+            atck.inc_wins();
+            return true;
+        }
+
         return false;
+    }
+
+    @Override
+    public boolean isSecondPlayerTurn() {
+        return atck_turn;
+    }
+
+    @Override
+    public void reset() {
+        atck_turn=true;
+        Board = new Piece[11][11];
+        for (int i = 3; i < 8; i++) {
+            this.Board[i][0] = new Pawn((this.atck), "A"+(i - 2));
+            this.Board[i][10] = new Pawn((this.atck), "A"+(i + 17));
+        }
+        Board[5][1] = new Pawn((this.atck),"A6");
+        this.Board[0][3] = new Pawn((this.atck),"A7");
+        this.Board[10][3] = new Pawn((this.atck),"A8");
+        this.Board[0][4] = new Pawn((this.atck),"A9");
+        this.Board[10][4] = new Pawn((this.atck),"A10");
+        this.Board[0][5] = new Pawn((this.atck),"A11");
+        this.Board[1][5] = new Pawn((this.atck),"A12");
+        this.Board[9][5] = new Pawn((this.atck),"A13");
+        this.Board[10][5] = new Pawn((this.atck),"A14");
+        this.Board[0][6] = new Pawn((this.atck),"A15");
+        this.Board[10][6] = new Pawn((this.atck),"A16");
+        this.Board[0][7] = new Pawn((this.atck),"A17");
+        this.Board[10][7] = new Pawn((this.atck),"A18");
+        this.Board[5][9] = new Pawn((this.atck),"A19");
+        this.Board[5][3] = new Pawn((this.def),"D1");
+        this.Board[4][4] = new Pawn((this.def),"D2");
+        this.Board[5][4] = new Pawn((this.def),"D3");
+        this.Board[6][4] = new Pawn((this.def),"D4");
+        this.Board[3][5] = new Pawn((this.def),"D5");
+        this.Board[4][5] = new Pawn((this.def),"D6");
+        this.Board[5][5] = new King((this.def),"K7");
+        this.Board[6][5] = new Pawn((this.def),"D8");
+        this.Board[7][5] = new Pawn((this.def),"D9");
+        this.Board[4][6] = new Pawn((this.def),"D10");
+        this.Board[5][6] = new Pawn((this.def),"D11");
+        this.Board[6][6] = new Pawn((this.def),"D12");
+        this.Board[5][7] = new Pawn((this.def),"D13");
 
     }
 
+    @Override
+    public void undoLastMove() {
+        if (undo.size()>=2){
+            undo_lest_move=false;
+        undo.removeLast();
+        undo.removeLast();
+        reset();
+    for (int i=0;i<undo.size();i=i+2) {
+        move(undo.get(i), undo.get(i + 1));
+    }
+            undo_lest_move=true;
+    }
+    }
+
+    @Override
+    public int getBoardSize() {
+        return Board.length;
+    }
+
+    //////////////////////////////////////////////PRIVATE METHODS//////////////////////////////////////////////
+    public void SetBoard(Position a,Piece l){
+        Board[a.getX()][a.getY()] = l;
+    }
+    public boolean checkbounds (Position b) {
+        if (b.getX()>10||b.getX()<0){
+            return false;
+        }
+        if (b.getY()>10||b.getY()<0){
+            return false;
+        }
+        return true;
+    }
+
+
+    private void create_players() {
+        this.atck = new ConcretePlayer(false);
+        this.def = new ConcretePlayer(true);
+
+    }
+
+    private boolean logic_move(Position a, Position b) {
+        Piece from = getPieceAtPosition(a);
+        Piece to = getPieceAtPosition(b);
+        String s = from.getType();
+        if( s.equals("♙") ){
+            if ((b.getX()==0&&b.getY()==0)||(b.getX()==0&&b.getY()==10)||(b.getX()==10&&b.getY()==0)||(b.getX()==10&&b.getY()==10))
+                return false;
+        }
+        if (a.getX() == b.getX()) {
+            if (a.getY() - b.getY() < 0) {
+                for (int i = a.getY()+1; i <= b.getY(); i++) {
+                    if (getPieceAtPosition(new Position(a.getX(), i)) != null) {
+                        //that was the orinal
+                        //if (getPieceAtPosition(new Position(i, a.getX())) != null)
+                        return false;
+                    }
+                }
+                if( !s.equals("♙")) {
+                    live_king.setX(b.getX());
+                    live_king.setY(b.getY());
+                }
+                SetBoard(a, null);
+                SetBoard(b, from);
+                return true;
+
+            }
+            if (a.getY() - b.getY() >0) {
+                for (int i = a.getY()-1; i >= b.getY(); i--) {
+                    if (getPieceAtPosition(new Position(a.getX(), i)) != null) {
+                        //that was the orinal
+                        //if (getPieceAtPosition(new Position(i, a.getX())) != null)
+                        return false;
+                    }
+                }
+                if( !s.equals("♙")) {
+
+                    live_king.setX(b.getX());
+                    live_king.setY(b.getY());
+                }
+                SetBoard(a, null);
+                SetBoard(b, from);
+                return true;
+
+            }
+
+        }
+        if (a.getY() == b.getY()) {
+            if (a.getX() - b.getX() < 0) {
+                for (int i = a.getX()+1; i <= b.getX(); i++) {
+                    if (getPieceAtPosition(new Position(i, a.getY())) != null) {
+                        return false;
+                    }
+
+
+                }
+                if( !s.equals("♙")) {
+                    live_king.setX(b.getX());
+                    live_king.setY(b.getY());
+                }
+                SetBoard(a, null);
+                SetBoard(b, from);
+                return true;
+
+            }
+            if (a.getX() - b.getX() > 0) {   //a.x > b.x
+                for (int i = a.getX()-1; i >= b.getX(); i--) {
+                    if (getPieceAtPosition(new Position(i, a.getY())) != null) {
+                        return false;
+                    }
+                }
+                if( !s.equals("♙")) {
+                    live_king.setX(b.getX());
+                    live_king.setY(b.getY());
+                }
+                SetBoard(a, null);
+                SetBoard(b, from);
+                return true;
+
+            }
+
+        }
+
+        return false;
+    }
     public void kill(Position b, ConcretePlayer p) {
         Position n1 = new Position(b.getX(),b.getY()-1);
         if ((checkbounds(n1))&&this.getPieceAtPosition(n1)!=null){
@@ -220,277 +358,67 @@ public class GameLogic implements PlayableLogic {
         }
 
     }
-
-    public void SetBoard(Position a,Piece l){
-        Board[a.getX()][a.getY()] = l;
-    }
-    public boolean checkbounds (Position b) {
-        if (b.getX()>10||b.getX()<0){
-            return false;
-        }
-        if (b.getY()>10||b.getY()<0){
-            return false;
-        }
-        return true;
-    }
-    @Override
-    public Piece getPieceAtPosition(Position position) {
-        return Board[position.getX()][position.getY()];
-    }
-
-    @Override
-    public Player getFirstPlayer() {
-        return atck;
-    }
-
-    @Override
-    public Player getSecondPlayer() {
-        return def;
-    }
-
-    @Override
-    public boolean isGameFinished() {
-        if(this.Board[0][0]!=null||this.Board[0][10]!=null||this.Board[10][0]!=null||this.Board[10][10]!=null){
-            def.inc_wins();
-            return true;
-        }
-        if(killKing)
-        {
-            atck.inc_wins();
-            return true;
-        }
-//        boolean n =false;
-//        boolean s =false;
-//        boolean e =false;
-//        boolean w =false;
-//        Position w1 = new Position(live_king.getX()-1, live_king.getY());
-//        Position e1 = new Position(live_king.getX()+1, live_king.getY());
-//        Position s1 = new Position(live_king.getX(), live_king.getY()+1);
-//        Position n1 = new Position(live_king.getX(), live_king.getY()-1);
-//        if (!checkbounds(w1)){
-//            w=true;
-//        }
-//        else {
-//            if (this.getPieceAtPosition(w1)!=null) {
-//                if (this.getPieceAtPosition(w1).getOwner() != def) {
-//                    w = true;
-//                }
-//            }
-//        }
-//        if (!checkbounds(e1)){
-//            e=true;
-//        }
-//        else {
-//            if (this.getPieceAtPosition(e1)!=null) {
-//                if (this.getPieceAtPosition(e1).getOwner() != def) {
-//                    e = true;
-//                }
-//            }
-//        }
-//        if (!checkbounds(s1)){
-//            s=true;
-//        }
-//        else {
-//            if (this.getPieceAtPosition(s1)!=null) {
-//                if (this.getPieceAtPosition(s1).getOwner() != def) {
-//                    s = true;
-//                }
-//            }
-//        }
-//        if (!checkbounds(n1)){
-//            n=true;
-//        }
-//        else {
-//            if (this.getPieceAtPosition(n1)!=null) {
-//
-//                if (this.getPieceAtPosition(n1).getOwner() != def) {
-//                    n = true;
-//                }
-//            }
-//        }
-//
-//        if (n&&s&&e&&w){
-//            return true;
-//        }
-//
-
-
-        return false;
-    }
-
-    @Override
-    public boolean isSecondPlayerTurn() {
-        return atck_turn;
-    }
-
-    @Override
-    public void reset() {
-        atck_turn=true;
-        Board = new Piece[11][11];
-        // player one setting
-        //   create_players();
-
-
-        // setting pieces locations and id
-        for (int i = 3; i < 8; i++) {
-            this.Board[i][0] = new Pawn((this.atck), "A"+(i - 2));
-            this.Board[i][10] = new Pawn((this.atck), "A"+(i + 17));
-        }
-        Board[5][1] = new Pawn((this.atck),"A6");
-        this.Board[0][3] = new Pawn((this.atck),"A7");
-        this.Board[10][3] = new Pawn((this.atck),"A8");
-        this.Board[0][4] = new Pawn((this.atck),"A9");
-        this.Board[10][4] = new Pawn((this.atck),"A10");
-        this.Board[0][5] = new Pawn((this.atck),"A11");
-        this.Board[1][5] = new Pawn((this.atck),"A12");
-        this.Board[9][5] = new Pawn((this.atck),"A13");
-        this.Board[10][5] = new Pawn((this.atck),"A14");
-        this.Board[0][6] = new Pawn((this.atck),"A15");
-        this.Board[10][6] = new Pawn((this.atck),"A16");
-        this.Board[0][7] = new Pawn((this.atck),"A17");
-        this.Board[10][7] = new Pawn((this.atck),"A18");
-        this.Board[5][9] = new Pawn((this.atck),"A19");
-        this.Board[5][3] = new Pawn((this.def),"D1");
-        this.Board[4][4] = new Pawn((this.def),"D2");
-        this.Board[5][4] = new Pawn((this.def),"D3");
-        this.Board[6][4] = new Pawn((this.def),"D4");
-        this.Board[3][5] = new Pawn((this.def),"D5");
-        this.Board[4][5] = new Pawn((this.def),"D6");
-        this.Board[5][5] = new King((this.def),"K7");
-        this.Board[6][5] = new Pawn((this.def),"D8");
-        this.Board[7][5] = new Pawn((this.def),"D9");
-        this.Board[4][6] = new Pawn((this.def),"D10");
-        this.Board[5][6] = new Pawn((this.def),"D11");
-        this.Board[6][6] = new Pawn((this.def),"D12");
-        this.Board[5][7] = new Pawn((this.def),"D13");
-
-    }
-
-    public void move_legit(Position a,Position b,boolean bo){
-        Piece from = getPieceAtPosition(a);
-        SetBoard(a, null);
-        SetBoard(b, from);
-        if (bo){
-            kill(b,atck);
+    private boolean kill_King(Position b, Position liveKing, ConcretePlayer def) {
+        boolean n =false;
+        boolean s =false;
+        boolean e =false;
+        boolean w =false;
+        Position w1 = new Position(live_king.getX()-1, live_king.getY());
+        Position e1 = new Position(live_king.getX()+1, live_king.getY());
+        Position s1 = new Position(live_king.getX(), live_king.getY()+1);
+        Position n1 = new Position(live_king.getX(), live_king.getY()-1);
+        if (!checkbounds(w1)){
+            w=true;
         }
         else {
-            kill(b, def);
+            if (this.getPieceAtPosition(w1)!=null) {
+                if (this.getPieceAtPosition(w1).getOwner() != def) {
+                    w = true;
+                }
+            }
         }
-    }
-    @Override
-    public void undoLastMove() {
-        undo.removeLast();
-        undo.removeLast();
-        reset();
-    boolean bo =true;
-    int j =2;
-    for (int i=0;i<undo.size();i=i+2){
-        move_legit(undo.get(i),undo.get(i+1),bo);
-        if (j%2==0){
-            bo=false;
+        if (!checkbounds(e1)){
+            e=true;
         }
         else {
-            bo= true;
+            if (this.getPieceAtPosition(e1)!=null) {
+                if (this.getPieceAtPosition(e1).getOwner() != def) {
+                    e = true;
+                }
+            }
         }
-    }
-    }
-
-    @Override
-    public int getBoardSize() {
-        return Board.length;
-    }
-
-    //////////////////////////////////////////////PRIVATE METHODS//////////////////////////////////////////////
-    private void create_players() {
-        this.atck = new ConcretePlayer(false);
-        this.def = new ConcretePlayer(true);
-
-    }
-
-    private boolean logic_move(Position a, Position b) {
-        Piece from = getPieceAtPosition(a);
-        Piece to = getPieceAtPosition(b);
-        String s = from.getType();
-        if( s.equals("♙") ){
-            if ((b.getX()==0&&b.getY()==0)||(b.getX()==0&&b.getY()==10)||(b.getX()==10&&b.getY()==0)||(b.getX()==10&&b.getY()==10))
-                return false;
+        if (!checkbounds(s1)){
+            s=true;
         }
-        if (a.getX() == b.getX()) {
-            if (a.getY() - b.getY() < 0) {
-                for (int i = a.getY()+1; i <= b.getY(); i++) {
-                    if (getPieceAtPosition(new Position(a.getX(), i)) != null) {
-                        //that was the orinal
-                        //if (getPieceAtPosition(new Position(i, a.getX())) != null)
-                        return false;
-                    }
+        else {
+            if (this.getPieceAtPosition(s1)!=null) {
+                if (this.getPieceAtPosition(s1).getOwner() != def) {
+                    s = true;
                 }
-                if( !s.equals("♙")) {
-                    live_king.setX(b.getX());
-                    live_king.setY(b.getY());
-                }
-                SetBoard(a, null);
-                SetBoard(b, from);
-                return true;
-
             }
-            if (a.getY() - b.getY() >0) {
-                for (int i = a.getY()-1; i >= b.getY(); i--) {
-                    if (getPieceAtPosition(new Position(a.getX(), i)) != null) {
-                        //that was the orinal
-                        //if (getPieceAtPosition(new Position(i, a.getX())) != null)
-                        return false;
-                    }
-                }
-                if( !s.equals("♙")) {
-
-                    live_king.setX(b.getX());
-                    live_king.setY(b.getY());
-                }
-                SetBoard(a, null);
-                SetBoard(b, from);
-                return true;
-
-            }
-
         }
-        if (a.getY() == b.getY()) {
-            if (a.getX() - b.getX() < 0) {
-                for (int i = a.getX()+1; i <= b.getX(); i++) {
-                    if (getPieceAtPosition(new Position(i, a.getY())) != null) {
-                        return false;
-                    }
+        if (!checkbounds(n1)){
+            n=true;
+        }
+        else {
+            if (this.getPieceAtPosition(n1)!=null) {
 
-
+                if (this.getPieceAtPosition(n1).getOwner() != def) {
+                    n = true;
                 }
-                if( !s.equals("♙")) {
-                    live_king.setX(b.getX());
-                    live_king.setY(b.getY());
-                }
-                SetBoard(a, null);
-                SetBoard(b, from);
-                return true;
-
             }
-            if (a.getX() - b.getX() > 0) {   //a.x > b.x
-                for (int i = a.getX()-1; i >= b.getX(); i--) {
-                    if (getPieceAtPosition(new Position(i, a.getY())) != null) {
-                        return false;
-                    }
-                }
-                if( !s.equals("♙")) {
-                    live_king.setX(b.getX());
-                    live_king.setY(b.getY());
-                }
-                SetBoard(a, null);
-                SetBoard(b, from);
-                return true;
-
-            }
-
         }
 
+        if (n&&s&&e&&w){
+
+            Pawn pieceAtPosition = (Pawn)this.getPieceAtPosition(b);
+            pieceAtPosition.inc_kill();
+            return true;
+        }
         return false;
+
     }
+
 
 
 }
