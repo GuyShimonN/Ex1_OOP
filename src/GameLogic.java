@@ -28,6 +28,9 @@ public class GameLogic implements PlayableLogic {
     public boolean move(Position a, Position b) {
         Piece from = getPieceAtPosition(a);
         if (atck_turn) {
+            if (from==null){
+                return false; //need to check why
+            }
             if (from.getOwner() != this.atck) {
                 return false;
             } else {
@@ -79,10 +82,10 @@ public class GameLogic implements PlayableLogic {
                     }
                     //   kill2(b,atck);
                     if (isGameFinished()){
-                        printQ1(false);
-                        print_q2();
-                        print_q3();
-                        print_q4();
+//                        printQ1(false);
+//                        print_q2();
+//                        print_q3();
+//                        print_q4();
                     }
                     return ans;
 
@@ -90,6 +93,9 @@ public class GameLogic implements PlayableLogic {
             }
         }
         else {
+            if (from==null){
+                return false; //need to check why
+            }
             if (from.getOwner() != this.def) {
                 return false;
             } else {
@@ -140,10 +146,10 @@ public class GameLogic implements PlayableLogic {
                         kill(b, def);
                     }
                     if (isGameFinished()){
-                        printQ1(false);
-                        print_q2();
-                        print_q3();
-                        print_q4();
+//                        printQ1(false);
+//                        print_q2();
+//                        print_q3();
+//                        print_q4();
                     }
                     return ans;
 
@@ -264,6 +270,21 @@ public class GameLogic implements PlayableLogic {
         arry_sort.add((ConcretePiece) this.Board[6][6]);
         this.Board[5][7] = new Pawn((this.def), "D13");
         arry_sort.add((ConcretePiece) this.Board[5][7]);
+        int counter=0;
+        for (int i=0;i<this.Board.length;i++)
+        {
+            for (int j=0;j<this.Board.length;j++)
+            {
+                Position p1=new Position(i,j);
+                if (this.getPieceAtPosition(p1)!=null)
+                {
+                    array_sort_postion.add(p1);
+                    array_sort_postion.get(counter).AllPlayersWasAtPostion().add(((ConcretePiece) this.Board[5][7]).getName());
+                    counter++;
+                }
+            }
+
+        }
 
     }
 
@@ -330,7 +351,7 @@ public class GameLogic implements PlayableLogic {
                     live_king.setY(b.getY());
                 }
                 ((ConcretePiece) this.getPieceAtPosition(a)).inc_step();
-                ((ConcretePiece) this.getPieceAtPosition(a)).Add_S_potion(b);
+                ((ConcretePiece) this.getPieceAtPosition(a)).Add_S_potion(a,b);
                 ((ConcretePiece) this.getPieceAtPosition(a)).num_square((b.getY()-a.getY()));
                 SetBoard(a, null);
                 SetBoard(b, from);
@@ -351,7 +372,7 @@ public class GameLogic implements PlayableLogic {
                     live_king.setY(b.getY());
                 }
                 ((ConcretePiece) this.getPieceAtPosition(a)).inc_step();
-                ((ConcretePiece) this.getPieceAtPosition(a)).Add_S_potion(b);
+                ((ConcretePiece) this.getPieceAtPosition(a)).Add_S_potion(a,b);
                 ((ConcretePiece) this.getPieceAtPosition(a)).num_square((a.getY()-b.getY()));
                 SetBoard(a, null);
                 SetBoard(b, from);
@@ -374,7 +395,7 @@ public class GameLogic implements PlayableLogic {
                     live_king.setY(b.getY());
                 }
                 ((ConcretePiece) this.getPieceAtPosition(a)).inc_step();
-                ((ConcretePiece) this.getPieceAtPosition(a)).Add_S_potion(b);
+                ((ConcretePiece) this.getPieceAtPosition(a)).Add_S_potion(a,b);
                 ((ConcretePiece) this.getPieceAtPosition(a)).num_square((b.getX()-a.getX()));
                 SetBoard(a, null);
                 SetBoard(b, from);
@@ -392,7 +413,7 @@ public class GameLogic implements PlayableLogic {
                     live_king.setY(b.getY());
                 }
                 ((ConcretePiece) this.getPieceAtPosition(a)).inc_step();
-                ((ConcretePiece) this.getPieceAtPosition(a)).Add_S_potion(b);
+                ((ConcretePiece) this.getPieceAtPosition(a)).Add_S_potion(a,b);
                 ((ConcretePiece) this.getPieceAtPosition(a)).num_square((a.getX()-b.getX()));
                 SetBoard(a, null);
                 SetBoard(b, from);
@@ -549,8 +570,8 @@ public class GameLogic implements PlayableLogic {
 
         if (n && s && e && w) {
 
-            Pawn pieceAtPosition = (Pawn) this.getPieceAtPosition(b);
-            pieceAtPosition.inc_kill();
+           // Pawn pieceAtPosition = (Pawn) this.getPieceAtPosition(b); //no need to caunt the kill of the king
+           // pieceAtPosition.inc_kill();
             return true;
         }
         return false;
@@ -567,13 +588,13 @@ public class GameLogic implements PlayableLogic {
         Collections.sort(arry_sort,q1);
         if(whowin==true)
         {
-            for (int i=0;i<arry_sort.size();i++)
-            {
-                if (arry_sort.get(i).getOwner()==this.atck)
-                {
-                    if (arry_sort.get(i).getNum_step()>0)
+            for (int i=0;i<arry_sort.size();i++) {
+                if (arry_sort.get(i).getOwner() == this.atck) {
+                    if (arry_sort.get(i).getNum_step() > 0)
                         System.out.println(arry_sort.get(i).getS_postion());
                 }
+            }
+            for (int i=0;i<arry_sort.size();i++) {
                 if (arry_sort.get(i).getOwner()==this.def)
                 {
                     if (arry_sort.get(i).getNum_step()>0)
@@ -583,19 +604,21 @@ public class GameLogic implements PlayableLogic {
         }
         if (whowin==false)
         {
-            for (int i=0;i<arry_sort.size();i++)
-            {
-                if (arry_sort.get(i).getOwner()==this.def)
-                {
-                    if (arry_sort.get(i).getNum_step()>0)
+            for (int i=0;i<arry_sort.size();i++) {
+                if (arry_sort.get(i).getOwner() == this.def) {
+                    if (arry_sort.get(i).getNum_step() > 0)
                         System.out.println(arry_sort.get(i).getS_postion());
                 }
+            }
+            for (int i=0;i<arry_sort.size();i++) {
                 if (arry_sort.get(i).getOwner()==this.atck)
                 {
                     if (arry_sort.get(i).getNum_step()>0)
                         System.out.println(arry_sort.get(i).getS_postion());
                 }
             }
+
+
         }
         System.out.println("***************************************************************************");
     }
@@ -604,7 +627,7 @@ public class GameLogic implements PlayableLogic {
         for (int i=arry_sort.size()-1;i>=0;i--) {
             if (arry_sort.get(i) instanceof Pawn) {
                 if (((Pawn) arry_sort.get(i)).getKill() != 0) {
-                    System.out.println(arry_sort.get(i).getName() + ": " + ((Pawn) arry_sort.get(i)).getKill() + " kill");
+                    System.out.println(arry_sort.get(i).getName() + ": " + ((Pawn) arry_sort.get(i)).getKill() + " kills");
                 }
 
             }
@@ -613,9 +636,9 @@ public class GameLogic implements PlayableLogic {
     }
     private void print_q3() {
         Collections.sort(arry_sort, q3);
-        for (int i=arry_sort.size()-1;i>=0;i--){
+        for (int i=arry_sort.size()-1;i >=0 ;i--){
             if (arry_sort.get(i).get_num_square()!=0){
-                System.out.println(arry_sort.get(i).getName()+": "+arry_sort.get(i).get_num_square()+" square");
+                System.out.println(arry_sort.get(i).getName()+": "+arry_sort.get(i).get_num_square()+" squares");
             }
         }
         System.out.println("***************************************************************************");
@@ -625,44 +648,30 @@ public class GameLogic implements PlayableLogic {
         {
             for (int i =0;i<array_sort_postion.size();i++)
             {
-                System.out.println("("+array_sort_postion.get(i).getX()+","+array_sort_postion.get(i).getY()+")"+array_sort_postion.get(i).AllPlayersWasAtPostion().size()+" pieces");
+                if (array_sort_postion.get(i).AllPlayersWasAtPostion().size()>1) {
+                    System.out.println("(" + array_sort_postion.get(i).getX() + ", " + array_sort_postion.get(i).getY() + ")" + array_sort_postion.get(i).AllPlayersWasAtPostion().size() + " pieces");
+                }
             }
         }
-        System.out.println("***************************************************************************");
-    }
+        System.out.println("***************************************************************************");    }
 
     Comparator<ConcretePiece> q1 = new Comparator<ConcretePiece>() {
         @Override
         public int compare(ConcretePiece o1, ConcretePiece o2) {
-            // Handle null cases
-            if (o1 == null && o2 == null) {
-                return 0;
-            }
-            if (o1 == null) {
-                return -1;
-            }
-            if (o2 == null) {
-                return 1;
-            }
-
-            // Compare by the number of steps
-
             int result = Integer.compare(o1.getNum_step(), o2.getNum_step());
-
-
-            // If the number of steps is the same, compare by other criteria if needed
-            if (result == 0) {
+            if (result==0){
+                int o1_s = Integer.parseInt(o1.getName().substring(1,o1.getName().length()));
+                int o2_s = Integer.parseInt(o2.getName().substring(1,o2.getName().length()));
+                result = Integer.compare(o1_s,o2_s);
             }
             return result;
         }
-
     };
-
     Comparator<ConcretePiece> q2 = new Comparator<ConcretePiece>() {
         @Override
         public int compare(ConcretePiece o1, ConcretePiece o2) {
             int result = 0;
-            if ( o1 instanceof King){
+            if (!( o2 instanceof King)){
                if (((Pawn) o2).getKill()>0){
                    return 1;
                }
@@ -671,7 +680,7 @@ public class GameLogic implements PlayableLogic {
                 return (Integer.compare(o1_s,o2_s));
 
             }
-            if (o2 instanceof King){
+            if (!(o1 instanceof King)){
 
                 if (((Pawn) o1).getKill()>0){
                     return 1;
@@ -705,8 +714,8 @@ public class GameLogic implements PlayableLogic {
             result = Integer.compare(o1.get_num_square(), o2.get_num_square());
 
         if (result==0){
-            int o1_s = Integer.parseInt(o1.getName().substring(1,o1.getName().length()));
-            int o2_s = Integer.parseInt(o2.getName().substring(1,o2.getName().length()));
+            int o1_s = (Integer.parseInt(o1.getName().substring(1,o1.getName().length())))*(-1);
+            int o2_s = (Integer.parseInt(o2.getName().substring(1,o2.getName().length())))*(-1);
             result = Integer.compare(o1_s,o2_s);
             }
             if (result==0){
@@ -722,7 +731,7 @@ public class GameLogic implements PlayableLogic {
         @Override
         public int compare(Position o1, Position o2) {
             int result = 0;
-            result = Integer.compare(o1.AllPlayersWasAtPostion().size(), o2.AllPlayersWasAtPostion().size());
+            result = Integer.compare(o2.AllPlayersWasAtPostion().size(), o1.AllPlayersWasAtPostion().size());
 
             if (result==0){
 
@@ -730,7 +739,7 @@ public class GameLogic implements PlayableLogic {
                 {
                     if (result==0)
                     {
-                        result = Integer.compare(o1.getY(), o2.getX());
+                        result = Integer.compare(o1.getY(), o2.getY());
                     }
                 }
             }
