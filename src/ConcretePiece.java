@@ -5,7 +5,7 @@ public class ConcretePiece implements Piece{
     private int num_step;
     private int square;
 
-    public ConcretePiece(ConcretePlayer p,String name){
+    public ConcretePiece(ConcretePlayer p,String name){ //this mattod is share to Pawn and king
         this.owner = p;
         this.name= name;
         this.num_step=0;
@@ -15,11 +15,11 @@ public class ConcretePiece implements Piece{
     @Override
     public Player getOwner() {
         return owner;
-    }
+    } //return the ConcretePiece
 
     public String getName(){
         return name;
-    }
+    } //return the name of the  ConcretePiece like k7 ,A6
     @Override
     public String getType() {
 //        String t = getName();
@@ -47,20 +47,23 @@ public class ConcretePiece implements Piece{
         return s_postion;
     }
 
-    public void Add_S_potion(Position b) {
+    public void Add_S_potion(Position a,Position b) {
 
         if (this.s_postion != null) {
-            this.s_postion += "(" + b.getX() + "," + b.getY() + ")";
+            this.s_postion += "(" + b.getX() + ", " + b.getY() + "), ";
         }
         if (this.s_postion == null) {
 
-            this.s_postion = this.getName() + ":[(" + b.getX() + "," + b.getY() + ")";
+            this.s_postion = this.getName() + ": [(" + a.getX() + ", " + a.getY() + "), ";
+            this.s_postion += "(" + b.getX() + ", " + b.getY() + "), ";
         }
     }
     public void Close_S_potion()
     {
+        this.s_postion=this.s_postion.substring(0,this.s_postion.length()-2);
         this.s_postion+="]";
     }
 
-    }
+}
+
 
