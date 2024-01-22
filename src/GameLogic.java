@@ -671,23 +671,23 @@ public class GameLogic implements PlayableLogic {
         @Override
         public int compare(ConcretePiece o1, ConcretePiece o2) {
             int result = 0;
-            if (!( o2 instanceof King)){
-               if (((Pawn) o2).getKill()>0){
+            if (!( o2 instanceof Pawn)){
+               if (((Pawn) o1).getKill()>0){
                    return 1;
                }
                 int o1_s = Integer.parseInt(o1.getName().substring(1,o1.getName().length()));
                 int o2_s = Integer.parseInt(o2.getName().substring(1,o2.getName().length()));
-                return (Integer.compare(o1_s,o2_s));
+                return (-1)*(Integer.compare(o1_s,o2_s));
 
             }
-            if (!(o1 instanceof King)){
+            if (!(o1 instanceof Pawn)){
 
-                if (((Pawn) o1).getKill()>0){
+                if (((Pawn) o2).getKill()>0){
                     return 1;
                 }
                 int o1_s = Integer.parseInt(o1.getName().substring(1,o1.getName().length()));
                 int o2_s = Integer.parseInt(o2.getName().substring(1,o2.getName().length()));
-                return (Integer.compare(o1_s,o2_s));
+                return (-1)*(Integer.compare(o1_s,o2_s));
 
             }
 
@@ -696,7 +696,7 @@ public class GameLogic implements PlayableLogic {
             if (result==0){
                 int o1_s = Integer.parseInt(o1.getName().substring(1,o1.getName().length()));
                 int o2_s = Integer.parseInt(o2.getName().substring(1,o2.getName().length()));
-                result = Integer.compare(o1_s,o2_s);
+                result = (-1)*(Integer.compare(o1_s,o2_s));
             }
             if (result==0){
                 if (o1.getOwner()==atck&&atck_win){
