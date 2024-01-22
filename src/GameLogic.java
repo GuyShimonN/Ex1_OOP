@@ -312,6 +312,7 @@ public class GameLogic implements PlayableLogic {
         Board[a.getX()][a.getY()] = l;
     }
 
+
     public boolean checkbounds(Position b) {
         if (b.getX() > 10 || b.getX() < 0) {
             return false;
@@ -440,7 +441,8 @@ public class GameLogic implements PlayableLogic {
                         }
                     }
                 }
-                if (n1.getY() == 0) {
+                if ((n1.getY() == 0)||(n1.getY()==1)&&((n1.getX()==0)||(n1.getX()==10))) {
+//               if (n1.getY() == 0) {
                     Pawn eat = (Pawn) this.getPieceAtPosition(b);
                     if (this.getPieceAtPosition(n1).getType().equals("♙")) {
                         eat.inc_kill();
@@ -464,7 +466,8 @@ public class GameLogic implements PlayableLogic {
                         }
                     }
                 }
-                if (s1.getY() == 10) {
+//                if (s1.getY() == 10){
+                if ((s1.getY() == 10)||(s1.getY()==9)&&((s1.getX()==0)||(s1.getX()==10))) {
                     Pawn eat = (Pawn) this.getPieceAtPosition(b);
                     if (this.getPieceAtPosition(s1).getType().equals("♙")) {
                         eat.inc_kill();
@@ -487,7 +490,8 @@ public class GameLogic implements PlayableLogic {
                         }
                     }
                 }
-                if (e1.getX() == 10) {
+             //   if (e1.getX() == 10){
+                 if ((e1.getX() == 10)||(e1.getX()==9)&&((e1.getY()==0)||(e1.getY()==10))) {
                     Pawn eat = (Pawn) this.getPieceAtPosition(b);
                     if (this.getPieceAtPosition(e1).getType().equals("♙")) {
                         eat.inc_kill();
@@ -509,7 +513,8 @@ public class GameLogic implements PlayableLogic {
                         }
                     }
                 }
-                if (w1.getX() == 0) {
+ //               if (w1.getX() == 0){
+               if ((w1.getX() == 0)||(w1.getX()==1)&&((w1.getY()==0)||(w1.getY()==10))) {
                     Pawn eat = (Pawn) this.getPieceAtPosition(b);
                     if (this.getPieceAtPosition(w1).getType().equals("♙")) {
                         eat.inc_kill();
