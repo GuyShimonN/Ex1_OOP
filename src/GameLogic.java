@@ -17,7 +17,7 @@ public class GameLogic implements PlayableLogic {
     private boolean atck_turn = true;
     private boolean killKing = false;
     private boolean atck_win;
-
+    private boolean enteruonce= false;
 
     public GameLogic() {
         create_players();
@@ -79,14 +79,19 @@ public class GameLogic implements PlayableLogic {
                     if (this.getPieceAtPosition(b).getType().equals("♙")) {
                         kill(b, atck);
                         killKing = kill_King(b, live_king, def);
+                        if (killKing){
+                            ans=true;
+                            printQ1(true);
+                            print_q2();
+                            print_q3();
+                            print_q4();
+                        }
                     }
+
                     //   kill2(b,atck);
-                    if (isGameFinished()){
-//                        printQ1(false);
-//                        print_q2();
-//                        print_q3();
-//                        print_q4();
-                    }
+//                    if (isGameFinished()){
+//
+//                    }
                     return ans;
 
                 }
@@ -146,10 +151,7 @@ public class GameLogic implements PlayableLogic {
                         kill(b, def);
                     }
                     if (isGameFinished()){
-//                        printQ1(false);
-//                        print_q2();
-//                        print_q3();
-//                        print_q4();
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                     }
                     return ans;
 
@@ -176,26 +178,29 @@ public class GameLogic implements PlayableLogic {
 
     @Override
     public boolean isGameFinished() {
-        if (this.Board[0][0] != null || this.Board[0][10] != null || this.Board[10][0] != null || this.Board[10][10] != null) {
+        if ((this.Board[0][0] != null || this.Board[0][10] != null || this.Board[10][0] != null || this.Board[10][10] != null)&&enteruonce==false) {
             def.inc_wins();
             atck_win=false;
              printQ1(false);
              print_q2();
             print_q3();
             print_q4();
+            enteruonce=true;
+            undo.clear();
             return true;
         }
-        if (killKing) {
+       else if (killKing&&(enteruonce==false)) {
             atck.inc_wins();
             atck_win=true;
-
-            printQ1(true);
-            print_q2();
-            print_q3();
-            print_q4();
+            enteruonce=true;
+            undo.clear();
+            return true;
+        }
+        if (enteruonce){
             return true;
         }
         return false;
+
     }
 
 
@@ -207,6 +212,8 @@ public class GameLogic implements PlayableLogic {
 
     @Override
     public void reset() {
+        array_sort_postion.clear();
+        enteruonce=false;
         atck_turn = true;
         Board = new Piece[11][11];
         for (int i = 3; i < 8; i++) {
@@ -279,7 +286,7 @@ public class GameLogic implements PlayableLogic {
                 if (this.getPieceAtPosition(p1)!=null)
                 {
                     array_sort_postion.add(p1);
-                    array_sort_postion.get(counter).AllPlayersWasAtPostion().add(((ConcretePiece) this.Board[5][7]).getName());
+                    array_sort_postion.get(counter).AllPlayersWasAtPostion().add(((ConcretePiece) this.Board[i][j]).getName());
                     counter++;
                 }
             }
@@ -676,7 +683,7 @@ public class GameLogic implements PlayableLogic {
         @Override
         public int compare(ConcretePiece o1, ConcretePiece o2) {
             int result = 0;
-            if (!( o2 instanceof Pawn)){
+            if ((o2.getType().equals("♔"))&&(o1.getType().equals("♙"))){
                if (((Pawn) o1).getKill()>0){
                    return 1;
                }
@@ -685,7 +692,7 @@ public class GameLogic implements PlayableLogic {
                 return (-1)*(Integer.compare(o1_s,o2_s));
 
             }
-            if (!(o1 instanceof Pawn)){
+            else if  ((o1.getType().equals("♔"))&&(o2.getType().equals("♙"))){
 
                 if (((Pawn) o2).getKill()>0){
                     return 1;
@@ -695,8 +702,11 @@ public class GameLogic implements PlayableLogic {
                 return (-1)*(Integer.compare(o1_s,o2_s));
 
             }
+            else if ((o1.getType().equals("♙"))&&(o2.getType().equals("♙"))) {
+                result = Integer.compare( ((Pawn) o1).getKill(), ((Pawn) o2).getKill());
+            }
 
-            result = Integer.compare( ((Pawn) o1).getKill(), ((Pawn) o2).getKill());
+           // result = Integer.compare( ((Pawn) o1).getKill(), ((Pawn) o2).getKill());
 
             if (result==0){
                 int o1_s = Integer.parseInt(o1.getName().substring(1,o1.getName().length()));
